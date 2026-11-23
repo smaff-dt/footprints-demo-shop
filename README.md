@@ -14,7 +14,7 @@ should show. Nothing is for sale.
 | The Dynatrace RUM JavaScript tag, first in every page's `<head>` | `site/rum-tag.html` |
 | Simulated visitors (Playwright) | `sim/visit.mjs`, probabilities in `sim/config.json` |
 | What Footprints should show | `sim/report.mjs` |
-| Visits every hour on GitHub Actions; logs on the `logs` branch | `.github/workflows/visitors.yml` |
+| 35 visits every 20 minutes on GitHub Actions (about 2,500 a day); logs on the `logs` branch | `.github/workflows/visitors.yml` |
 
 Like real shops, it has a sticky header, a cookie banner fixed at the bottom,
 product pictures shown late by a script, a layout for desktop, tablet and
