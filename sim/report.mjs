@@ -3,8 +3,9 @@
 // definitions:
 // - Visits: visits that saw the page.
 // - Clicks, Visits clicking, Click share: clicks on the element (typing in a
-//   field starts with a click), visits with at least one, share of the page's
-//   clicks. The cookie banner is left out (not in Footprints' pictures).
+//   field starts with a click), visits with at least one, share of all the
+//   page's clicks. The cookie bar's own rows are left out (not in Footprints'
+//   pictures), its clicks still count in the total.
 // - Exposure: visits that saw at least half of the element (scrolled far
 //   enough), or clicked it, over the page's visits.
 // - Click rate: visits clicking over visits that saw it.
@@ -20,6 +21,7 @@
 // Usage: node sim/report.mjs [logs folder or files…] [--since 2026-11-24T08:00] [--device desktop|mobile] [--out report.md]
 import { readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { PRODUCTS } from "../site/products.mjs";
 
 const argv = process.argv.slice(2);
 const opt = (name) => {
@@ -65,7 +67,9 @@ function analyse(pageKey) {
         if (e.kind === "rage") r.rage = true;
         if (confirmedAt > viewIndex) r.converted = true;
         perVisit.set(e.key, r);
-        if (!e.key.startsWith("cookie-")) totalClicks += e.times || 1;
+        // Every click counts in the page's total, the cookie bar's too (Footprints
+        // divides by all the clicks recorded on the page, shown or not).
+        totalClicks += e.times || 1;
         if (SLOW[e.key] && (!slowest || SLOW[e.key] > SLOW[slowest])) slowest = e.key;
       }
       for (const [key, box] of Object.entries(w.boxes || {})) {
@@ -89,6 +93,27 @@ function analyse(pageKey) {
   return { visits: seen.length, totalClicks, els, slowestOn };
 }
 
+const CATEGORIES = ["Telescopes", "Binoculars", "Accessories", "Books"];
+/** The element's name as Footprints shows it (cards in lists are named by position). */
+function shownName(key, pageName) {
+  if (key.startsWith("card:") && pageName.startsWith("Home")) {
+    const i = PRODUCTS.findIndex((p) => p.id === key.slice(5));
+    return `Best sellers · position ${i + 1} (${key.slice(5)})`;
+  }
+  if (key.startsWith("card:")) return `You may also like · ${key.slice(5)}`;
+  if (key.startsWith("category:")) return `Shop by category · position ${CATEGORIES.indexOf(key.slice(9)) + 1} (${key.slice(9)})`;
+  if (key.startsWith("nav:")) return `${key.slice(4)} (link)`;
+  if (key.startsWith("footer:")) return `${key.slice(7)} (footer link)`;
+  const BY_ID = {
+    "hero-cta": "Shop the sale (link)", "hero-secondary": "See best sellers (link)", search: "Search (field)",
+    "newsletter-email": "Email (field)", "newsletter-submit": "Sign up (button)", "variant-large": "Large +$120 (button)",
+    "variant-pro": "Pro +$260 (button)", "size-guide": "Which size is right for me? (link)", "add-to-cart": "Add to cart (button)",
+    "coupon-code": "Coupon code (field)", "apply-coupon": "Apply (button)", "go-checkout": "Checkout (link)",
+    "continue-shopping": "Continue shopping (link)", "place-order": "Place order (button)",
+  };
+  return BY_ID[key] || `${key} (field)`;
+}
+
 function table(name, pageKey) {
   const a = analyse(pageKey);
   if (!a.visits) return "";
@@ -98,7 +123,7 @@ function table(name, pageKey) {
   md += "| Element | Clicks | Visits clicking | Click share | Exposure | Click rate | Conversion | Rage clicks | Errors after click | Slow response |\n";
   md += "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |\n";
   for (const [key, t] of rows) {
-    md += `| ${key} | ${t.clicks} | ${t.clicking} | ${pct(t.clicks, a.totalClicks)} | ${pct(t.saw, a.visits)} | ${pct(t.clicking, t.saw)} | ${pct(t.converted, t.clicking)} | ${pct(t.rage, t.clicking)} | ${pct(t.errors, t.clicking)} | ${a.slowestOn.has(key) ? pct(a.slowestOn.get(key), a.visits) : "–"} |\n`;
+    md += `| ${shownName(key, name)} | ${t.clicks} | ${t.clicking} | ${pct(t.clicks, a.totalClicks)} | ${pct(t.saw, a.visits)} | ${pct(t.clicking, t.saw)} | ${pct(t.converted, t.clicking)} | ${pct(t.rage, t.clicking)} | ${pct(t.errors, t.clicking)} | ${a.slowestOn.has(key) ? pct(a.slowestOn.get(key), a.visits) : "–"} |\n`;
   }
   return md + "\n";
 }
