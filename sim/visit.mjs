@@ -122,6 +122,14 @@ async function visit(browser, n) {
     }
     await sleep(between(300, 900));
   }
+  /** Where a section starts on the page (waits for it to be there). */
+  async function topOf(selector, offset) {
+    await page.locator(selector).first().waitFor({ state: "attached", timeout: 4000 }).catch(() => {});
+    return page.evaluate(([sel, off]) => {
+      const el = document.querySelector(sel);
+      return el ? el.getBoundingClientRect().top + scrollY + off : scrollY;
+    }, [selector, offset]);
+  }
   async function scrollToBottom() {
     await scrollTo(await page.evaluate("document.documentElement.scrollHeight"));
   }
@@ -131,10 +139,24 @@ async function visit(browser, n) {
     if (!(await el.isVisible().catch(() => false))) return false;
     const box0 = await el.boundingBox();
     await scrollTo((await page.evaluate("scrollY")) + box0.y);
-    const box = await el.boundingBox();
-    if (!box) return false;
-    const x = box.x + box.width * between(0.05, 0.95);
-    const y = box.y + box.height * between(0.05, 0.95);
+    // The spot must be on the element itself, not on something over it (the
+    // sticky header, the cookie bar): else the log would say a click happened
+    // where it did not.
+    let x, y;
+    for (let attempt = 0; ; attempt++) {
+      const box = await el.boundingBox();
+      if (!box) return false;
+      x = box.x + box.width * between(0.05, 0.95);
+      y = box.y + box.height * between(0.05, 0.95);
+      const onIt = await el.evaluate((node, [px, py]) => {
+        const hit = document.elementFromPoint(px, py);
+        return !!hit && (node === hit || node.contains(hit));
+      }, [x, y]);
+      if (onIt) break;
+      if (attempt === 4) return false;
+      await el.evaluate((node) => node.scrollIntoView({ block: "center" }));
+      await sleep(between(200, 400));
+    }
     await page.mouse.move(x, y, { steps: 5 });
     for (let i = 0; i < times; i++) {
       await page.mouse.click(x + between(-2, 2), y + between(-2, 2));
@@ -176,7 +198,7 @@ async function visit(browser, n) {
     }
     if (chance(H.click.nav)) {
       const i = Math.floor(rnd() * 4);
-      if (await page.locator(".main-nav a").nth(i).isVisible()) return go(`.main-nav a >> nth=${i}`, "nav:" + (await page.locator(".main-nav a").nth(i).textContent()).trim());
+      if (await page.locator(".main-nav a").nth(i).isVisible()) return go(`.main-nav a >> nth=${i}`, "nav:" + (await page.locator(".main-nav a").nth(i).textContent({ timeout: 3000 })).trim());
     }
     if (chance(H.click.search)) {
       if (await type("#search", "search", pick(["dobsonian", "binoculars", "moon filter", "eyepiece"]))) {
@@ -185,14 +207,14 @@ async function visit(browser, n) {
       }
     }
     if (reach.categories) {
-      await scrollTo(await page.evaluate("document.querySelector('.categories').getBoundingClientRect().top + scrollY"));
+      await scrollTo(await topOf(".categories", 0));
       if (chance(H.click.category)) {
         const i = Math.floor(rnd() * 4);
-        return go(`.category >> nth=${i}`, "category:" + (await page.locator(".category").nth(i).textContent()).trim());
+        return go(`.category >> nth=${i}`, "category:" + (await page.locator(".category").nth(i).textContent({ timeout: 3000 })).trim());
       }
     }
     if (reach.bestSellers) {
-      await scrollTo(await page.evaluate("document.querySelector('#best-sellers').getBoundingClientRect().top + scrollY + 200"));
+      await scrollTo(await topOf("#best-sellers", 200));
       if (chance(H.click.product)) {
         // Earlier cards are clicked more, as on real shops.
         const k = weighted(H.click.productWeights.map((w, idx) => ({ weight: w, idx }))).idx;
@@ -200,9 +222,9 @@ async function visit(browser, n) {
         return go(`#best-sellers .card >> nth=${k}`, "card:" + href.split("/").pop());
       }
     }
-    if (reach.benefits) await scrollTo(await page.evaluate("document.querySelector('.benefits').getBoundingClientRect().top + scrollY + 100"));
+    if (reach.benefits) await scrollTo(await topOf(".benefits", 100));
     if (reach.newsletter) {
-      await scrollTo(await page.evaluate("document.querySelector('.newsletter').getBoundingClientRect().top + scrollY + 100"));
+      await scrollTo(await topOf(".newsletter", 100));
       if (chance(H.click.newsletter)) {
         await type("#newsletter-email", "newsletter-email", `visitor${Math.floor(rnd() * 1e6)}@example.com`);
         await click("#newsletter-submit", "newsletter-submit");
@@ -214,7 +236,7 @@ async function visit(browser, n) {
       if (chance(H.click.footer)) {
         const links = page.locator(".site-footer a");
         const i = Math.floor(rnd() * (await links.count()));
-        return go(`.site-footer a >> nth=${i}`, "footer:" + (await links.nth(i).textContent()).trim());
+        return go(`.site-footer a >> nth=${i}`, "footer:" + (await links.nth(i).textContent({ timeout: 3000 })).trim());
       }
     }
     await pause();
@@ -236,7 +258,7 @@ async function visit(browser, n) {
       await click("#size-guide", "size-guide", rage ? { times: 4, gapMs: [150, 300], kind: "rage" } : {});
       await pause();
     }
-    if (chance(P.reviews)) await scrollTo(await page.evaluate("document.querySelector('.reviews').getBoundingClientRect().top + scrollY + 200"));
+    if (chance(P.reviews)) await scrollTo(await topOf(".reviews", 200));
     if (chance(P.addToCart)) return go("#add-to-cart", "add-to-cart");
     if (productPages < P.maxProductPages && chance(P.related)) {
       const k = Math.floor(rnd() * 5);
