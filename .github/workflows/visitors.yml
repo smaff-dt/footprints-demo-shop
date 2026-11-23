@@ -27,9 +27,14 @@ jobs:
       - name: Check that the shop sends data to Dynatrace
         id: tag
         run: |
-          # Without the RUM tag, Dynatrace would not see the visits: skip.
+          # Without the RUM tag, or the shop not online, Dynatrace would not see the visits: skip.
+          site="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
           if grep -q "add site/rum-tag.html" docs/index.html; then
             echo "No Dynatrace RUM tag in the shop yet: no visits."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          elif ! curl -fsS "$site" | grep -q "Skyward"; then
+            # Not published yet (Settings > Pages: main, /docs): no visits.
+            echo "The shop is not online at $site yet: no visits."
             echo "ready=false" >> "$GITHUB_OUTPUT"
           else
             echo "ready=true" >> "$GITHUB_OUTPUT"
