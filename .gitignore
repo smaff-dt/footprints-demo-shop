@@ -1,0 +1,5 @@
+node_modules/
+logs/
+run.jsonl
+logbook/
+report.md

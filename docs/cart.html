@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" data-base="./">
+<head>
+<!-- Dynatrace RUM tag: add site/rum-tag.html and build again -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your cart · Skyward Optics (demo)</title>
+<link rel="stylesheet" href="./shop.css">
+<script src="./shop.js" defer></script>
+</head>
+<body class="">
+<div class="demo-note">Demo store for testing Footprints. Nothing here is for sale.</div>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="./">Skyward <span>Optics</span></a>
+    <nav class="main-nav">
+      <a href="./product/SKY-130">Telescopes</a>
+      <a href="./product/BIN-1050">Binoculars</a>
+      <a href="./product/EYE-KIT">Accessories</a>
+      <a href="./product/BK-ATLAS">Books</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false"><input id="search" type="search" placeholder="Search telescopes, binoculars…" aria-label="Search"></form>
+    <a class="cart-link" href="./cart">Cart (<span id="cart-count">0</span>)</a>
+  </div>
+</header>
+<main>
+<div class="wrap" style="padding-top:32px">
+  <h1>Your cart</h1>
+  <table class="cart-lines"><thead><tr><th>Product</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody id="cart-body"></tbody></table>
+  <p style="font-size:20px">Total: <strong id="cart-total">$0</strong></p>
+  <div class="coupon"><input id="coupon-code" placeholder="Coupon code" aria-label="Coupon code"><button class="btn btn-ghost" id="apply-coupon" type="button">Apply</button></div>
+  <div class="message" id="coupon-message"></div>
+  <div class="buy-row"><a class="btn btn-primary" id="go-checkout" href="./checkout">Checkout</a><a class="btn btn-ghost" id="continue-shopping" href="./">Continue shopping</a></div>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="wrap cols">
+    <div><h4>Shop</h4><a href="./product/SKY-100">Refractors</a><a href="./product/DOB-200">Dobsonians</a><a href="./product/BIN-842">Binoculars</a><a href="./product/MNT-EQ3">Mounts</a></div>
+    <div><h4>Help</h4><a href="./#delivery">Delivery</a><a href="./#returns">Returns</a><a href="./#contact">Contact us</a></div>
+    <div><h4>Learn</h4><a href="./product/BK-ATLAS">Night Sky Atlas</a><a href="./#guides">Buying guides</a></div>
+    <div><h4>Skyward Optics</h4><a href="./#about">About</a><a href="./#careers">Careers</a></div>
+  </div>
+</footer>
+<div class="cookie" id="cookie-banner" role="dialog" aria-label="Cookies">
+  <span>We use cookies to improve your visit.</span>
+  <button data-answer="accepted" id="cookie-accept">Accept all</button>
+  <button data-answer="rejected" id="cookie-reject">Only necessary</button>
+</div>
+</body>
+</html>

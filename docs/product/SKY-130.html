@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" data-base="../">
+<head>
+<!-- Dynatrace RUM tag: add site/rum-tag.html and build again -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skyward 130 Reflector · Skyward Optics (demo)</title>
+<link rel="stylesheet" href="../shop.css">
+<script src="../shop.js" defer></script>
+</head>
+<body class="">
+<div class="demo-note">Demo store for testing Footprints. Nothing here is for sale.</div>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="../">Skyward <span>Optics</span></a>
+    <nav class="main-nav">
+      <a href="../product/SKY-130">Telescopes</a>
+      <a href="../product/BIN-1050">Binoculars</a>
+      <a href="../product/EYE-KIT">Accessories</a>
+      <a href="../product/BK-ATLAS">Books</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false"><input id="search" type="search" placeholder="Search telescopes, binoculars…" aria-label="Search"></form>
+    <a class="cart-link" href="../cart">Cart (<span id="cart-count">0</span>)</a>
+  </div>
+</header>
+<main>
+<div class="wrap">
+  <div class="product">
+    <div class="pic" data-picture="../img/SKY-130.svg" role="img" aria-label="Skyward 130 Reflector"></div>
+    <div>
+      <h1>Skyward 130 Reflector</h1>
+      <div class="price">$529</div>
+      <div class="field"><label>Aperture</label>
+        <div class="variants" id="variants"><button type="button" class="variant selected" id="variant-standard">Standard</button><button type="button" class="variant" id="variant-large">Large +$120</button><button type="button" class="variant" id="variant-pro">Pro +$260</button></div>
+        <div id="variant-note" style="font-size:13px;color:#555;margin-top:4px"></div></div>
+      <div class="field"><label for="qty">Quantity</label><input id="qty" type="number" min="1" value="1" style="max-width:100px"></div>
+      <a class="size-guide" id="size-guide" href="#">Which size is right for me?</a>
+      <div class="buy-row">
+        <button class="btn btn-dark" id="add-to-cart" data-id="SKY-130" data-name="Skyward 130 Reflector" data-price="529">Add to cart</button>
+        <span style="font-size:14px;color:#0f5c3a">In stock, ships tomorrow</span>
+      </div>
+      <table class="specs"><tr><td>Category</td><td>Telescopes</td></tr><tr><td>Product code</td><td>SKY-130</td></tr><tr><td>Warranty</td><td>2 years</td></tr></table>
+    </div>
+  </div>
+  <section class="block reviews">
+    <h2>Reviews</h2>
+    <div class="review"><strong>Great first scope.</strong> Easy to set up, sharp views of the Moon.</div>
+    <div class="review"><strong>Solid build.</strong> Heavier than I expected, but very stable.</div>
+    <div class="review"><strong>Good value.</strong> The included eyepiece is fine to start with.</div>
+  </section>
+  <section class="block">
+    <h2>You may also like</h2>
+    <div class="grid"><a class="card" href="../product/SKY-100"><div class="pic" data-picture="../img/SKY-100.svg" role="img" aria-label="Skyward 100 Refractor"></div><div class="info"><p class="name">Skyward 100 Refractor</p><div class="price">$349</div></div></a><a class="card" href="../product/TRV-70"><div class="pic" data-picture="../img/TRV-70.svg" role="img" aria-label="Traveller 70 Compact"></div><div class="info"><p class="name">Traveller 70 Compact</p><div class="price">$179</div></div></a><a class="card" href="../product/DOB-200"><div class="pic" data-picture="../img/DOB-200.svg" role="img" aria-label="Deep Sky 200 Dobsonian"></div><div class="info"><p class="name">Deep Sky 200 Dobsonian</p><div class="price">$899</div></div></a><a class="card" href="../product/BIN-1050"><div class="pic" data-picture="../img/BIN-1050.svg" role="img" aria-label="Field 10x50 Binoculars"></div><div class="info"><p class="name">Field 10x50 Binoculars</p><div class="price">$139</div></div></a><a class="card" href="../product/BIN-842"><div class="pic" data-picture="../img/BIN-842.svg" role="img" aria-label="Pocket 8x42 Binoculars"></div><div class="info"><p class="name">Pocket 8x42 Binoculars</p><div class="price">$229</div></div></a></div>
+  </section>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="wrap cols">
+    <div><h4>Shop</h4><a href="../product/SKY-100">Refractors</a><a href="../product/DOB-200">Dobsonians</a><a href="../product/BIN-842">Binoculars</a><a href="../product/MNT-EQ3">Mounts</a></div>
+    <div><h4>Help</h4><a href="../#delivery">Delivery</a><a href="../#returns">Returns</a><a href="../#contact">Contact us</a></div>
+    <div><h4>Learn</h4><a href="../product/BK-ATLAS">Night Sky Atlas</a><a href="../#guides">Buying guides</a></div>
+    <div><h4>Skyward Optics</h4><a href="../#about">About</a><a href="../#careers">Careers</a></div>
+  </div>
+</footer>
+<div class="cookie" id="cookie-banner" role="dialog" aria-label="Cookies">
+  <span>We use cookies to improve your visit.</span>
+  <button data-answer="accepted" id="cookie-accept">Accept all</button>
+  <button data-answer="rejected" id="cookie-reject">Only necessary</button>
+</div>
+</body>
+</html>

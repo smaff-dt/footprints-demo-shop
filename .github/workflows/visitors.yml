@@ -1,0 +1,59 @@
+name: Simulated visitors
+
+# Every hour, a batch of simulated visitors goes through the demo shop, and
+# what they did is appended to the logs on the `logs` branch.
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+    inputs:
+      visits:
+        description: "Number of visits"
+        default: "25"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: visitors
+  cancel-in-progress: false
+
+jobs:
+  visit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Playwright and Chromium
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Visit the shop
+        env:
+          QUIET: "1"
+        run: |
+          node sim/visit.mjs \
+            --site "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/" \
+            --visits "${{ github.event.inputs.visits || '25' }}" \
+            --log run.jsonl
+      - name: Append to the logs branch
+        run: |
+          git config user.name "demo-shop-visitors"
+          git config user.email "demo-shop-visitors@users.noreply.github.com"
+          day=$(date -u +%F)
+          for attempt in 1 2 3; do
+            rm -rf logbook
+            if git fetch -q origin logs; then
+              git worktree add -q logbook FETCH_HEAD
+            else
+              git worktree add -q --orphan -b logs logbook
+            fi
+            mkdir -p logbook/logs
+            cat run.jsonl >> "logbook/logs/$day.jsonl"
+            (cd logbook && git add logs && git commit -qm "Visits $(date -u +%FT%H:%MZ)" && git push -q origin HEAD:logs) && break
+            git worktree remove --force logbook
+            sleep $((attempt * 10))
+          done

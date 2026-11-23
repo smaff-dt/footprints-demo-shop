@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en" data-base="./">
+<head>
+<!-- Dynatrace RUM tag: add site/rum-tag.html and build again -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Telescopes and binoculars · Skyward Optics (demo)</title>
+<link rel="stylesheet" href="./shop.css">
+<script src="./shop.js" defer></script>
+</head>
+<body class="">
+<div class="demo-note">Demo store for testing Footprints. Nothing here is for sale.</div>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="./">Skyward <span>Optics</span></a>
+    <nav class="main-nav">
+      <a href="./product/SKY-130">Telescopes</a>
+      <a href="./product/BIN-1050">Binoculars</a>
+      <a href="./product/EYE-KIT">Accessories</a>
+      <a href="./product/BK-ATLAS">Books</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false"><input id="search" type="search" placeholder="Search telescopes, binoculars…" aria-label="Search"></form>
+    <a class="cart-link" href="./cart">Cart (<span id="cart-count">0</span>)</a>
+  </div>
+</header>
+<main>
+<section class="hero" style="background:#0f1e2e">
+  <div class="wrap">
+    <div>
+      <h1>Winter sky sale: up to 30% off telescopes</h1>
+      <p>Long nights, clear skies. Everything you need to see Saturn's rings this season.</p>
+      <a class="btn btn-primary" id="hero-cta" href="./product/DOB-200">Shop the sale</a>
+      <a class="btn btn-ghost" id="hero-secondary" href="#best-sellers" style="margin-left:12px">See best sellers</a>
+    </div>
+    <div class="hero-art" style="background-image:url('./img/hero.svg')" role="img" aria-label="Night sky"></div>
+  </div>
+</section>
+<section class="block">
+  <div class="wrap">
+    <h2>Shop by category</h2>
+    <div class="categories">
+      <a class="category" href="./product/SKY-130">Telescopes</a>
+      <a class="category" href="./product/BIN-1050">Binoculars</a>
+      <a class="category" href="./product/EYE-KIT">Accessories</a>
+      <a class="category" href="./product/BK-ATLAS">Books</a>
+    </div>
+  </div>
+</section>
+<section class="block" id="best-sellers">
+  <div class="wrap">
+    <h2>Best sellers</h2>
+    <div class="grid"><a class="card" href="./product/SKY-100"><div class="pic" data-picture="./img/SKY-100.svg" role="img" aria-label="Skyward 100 Refractor"></div><div class="info"><p class="name">Skyward 100 Refractor</p><div class="price">$349</div></div></a><a class="card" href="./product/SKY-130"><div class="pic" data-picture="./img/SKY-130.svg" role="img" aria-label="Skyward 130 Reflector"></div><div class="info"><p class="name">Skyward 130 Reflector</p><div class="price">$529</div></div></a><a class="card" href="./product/TRV-70"><div class="pic" data-picture="./img/TRV-70.svg" role="img" aria-label="Traveller 70 Compact"></div><div class="info"><p class="name">Traveller 70 Compact</p><div class="price">$179</div></div></a><a class="card" href="./product/DOB-200"><div class="pic" data-picture="./img/DOB-200.svg" role="img" aria-label="Deep Sky 200 Dobsonian"></div><div class="info"><p class="name">Deep Sky 200 Dobsonian</p><div class="price">$899</div></div></a><a class="card" href="./product/BIN-1050"><div class="pic" data-picture="./img/BIN-1050.svg" role="img" aria-label="Field 10x50 Binoculars"></div><div class="info"><p class="name">Field 10x50 Binoculars</p><div class="price">$139</div></div></a><a class="card" href="./product/BIN-842"><div class="pic" data-picture="./img/BIN-842.svg" role="img" aria-label="Pocket 8x42 Binoculars"></div><div class="info"><p class="name">Pocket 8x42 Binoculars</p><div class="price">$229</div></div></a><a class="card" href="./product/EYE-KIT"><div class="pic" data-picture="./img/EYE-KIT.svg" role="img" aria-label="Eyepiece Starter Kit"></div><div class="info"><p class="name">Eyepiece Starter Kit</p><div class="price">$89</div></div></a><a class="card" href="./product/FLT-SUN"><div class="pic" data-picture="./img/FLT-SUN.svg" role="img" aria-label="Solar Filter 100 mm"></div><div class="info"><p class="name">Solar Filter 100 mm</p><div class="price">$59</div></div></a><a class="card" href="./product/MNT-EQ3"><div class="pic" data-picture="./img/MNT-EQ3.svg" role="img" aria-label="EQ3 Tracking Mount"></div><div class="info"><p class="name">EQ3 Tracking Mount</p><div class="price">$459</div></div></a><a class="card" href="./product/BK-ATLAS"><div class="pic" data-picture="./img/BK-ATLAS.svg" role="img" aria-label="Night Sky Atlas"></div><div class="info"><p class="name">Night Sky Atlas</p><div class="price">$29</div></div></a></div>
+  </div>
+</section>
+<section class="block">
+  <div class="wrap">
+    <h2>Why Skyward</h2>
+    <div class="benefits">
+      <div class="benefit"><h3>Free delivery</h3><p>On every order over $99, in 2 to 4 days.</p></div>
+      <div class="benefit"><h3>60-day returns</h3><p>Not the right fit? Send it back, no questions asked.</p></div>
+      <div class="benefit"><h3>Expert advice</h3><p>Our astronomers answer within a day.</p></div>
+    </div>
+  </div>
+</section>
+<section class="block">
+  <div class="wrap">
+    <div class="newsletter">
+      <div><h2 style="margin:0 0 6px">Clear-sky alerts</h2><p style="margin:0">A short email when the sky is clear where you live.</p></div>
+      <form id="newsletter-form"><input id="newsletter-email" type="email" placeholder="you@example.com" aria-label="Email" required><button class="btn btn-primary" id="newsletter-submit" type="submit">Sign up</button></form>
+      <div class="newsletter-thanks" id="newsletter-thanks">Thanks, you are on the list.</div>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap cols">
+    <div><h4>Shop</h4><a href="./product/SKY-100">Refractors</a><a href="./product/DOB-200">Dobsonians</a><a href="./product/BIN-842">Binoculars</a><a href="./product/MNT-EQ3">Mounts</a></div>
+    <div><h4>Help</h4><a href="./#delivery">Delivery</a><a href="./#returns">Returns</a><a href="./#contact">Contact us</a></div>
+    <div><h4>Learn</h4><a href="./product/BK-ATLAS">Night Sky Atlas</a><a href="./#guides">Buying guides</a></div>
+    <div><h4>Skyward Optics</h4><a href="./#about">About</a><a href="./#careers">Careers</a></div>
+  </div>
+</footer>
+<div class="cookie" id="cookie-banner" role="dialog" aria-label="Cookies">
+  <span>We use cookies to improve your visit.</span>
+  <button data-answer="accepted" id="cookie-accept">Accept all</button>
+  <button data-answer="rejected" id="cookie-reject">Only necessary</button>
+</div>
+</body>
+</html>

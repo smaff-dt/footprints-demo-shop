@@ -1,0 +1,15 @@
+{
+  "name": "footprints-demo-shop",
+  "private": true,
+  "type": "module",
+  "description": "A demo shop with simulated visitors, to check Footprints against known numbers.",
+  "scripts": {
+    "build": "node site/build.mjs",
+    "serve": "node sim/serve.mjs",
+    "visit": "node sim/visit.mjs",
+    "report": "node sim/report.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.63.0"
+  }
+}
