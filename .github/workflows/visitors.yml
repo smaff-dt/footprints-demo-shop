@@ -24,14 +24,27 @@ jobs:
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
+      - name: Check that the shop sends data to Dynatrace
+        id: tag
+        run: |
+          # Without the RUM tag, Dynatrace would not see the visits: skip.
+          if grep -q "add site/rum-tag.html" docs/index.html; then
+            echo "No Dynatrace RUM tag in the shop yet: no visits."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
       - uses: actions/setup-node@v4
+        if: steps.tag.outputs.ready == 'true'
         with:
           node-version: 22
       - name: Install Playwright and Chromium
+        if: steps.tag.outputs.ready == 'true'
         run: |
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
       - name: Visit the shop
+        if: steps.tag.outputs.ready == 'true'
         env:
           QUIET: "1"
         run: |
@@ -40,6 +53,7 @@ jobs:
             --visits "${{ github.event.inputs.visits || '25' }}" \
             --log run.jsonl
       - name: Append to the logs branch
+        if: steps.tag.outputs.ready == 'true'
         run: |
           git config user.name "demo-shop-visitors"
           git config user.email "demo-shop-visitors@users.noreply.github.com"
