@@ -17,7 +17,7 @@
 //   the page's visits (the aperture buttons take 450 ms, each key in the zip
 //   code 300 ms; nothing else is slow).
 //
-// Usage: node sim/report.mjs [logs folder or files…] [--since 2026-11-24] [--out report.md]
+// Usage: node sim/report.mjs [logs folder or files…] [--since 2026-11-24T08:00] [--device desktop|mobile] [--out report.md]
 import { readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -27,6 +27,9 @@ const opt = (name) => {
   return i >= 0 ? argv[i + 1] : undefined;
 };
 const since = opt("since");
+// Footprints' device filter on the window width: desktop ≥ 1024 px, mobile < 768 px.
+const device = opt("device") || "all";
+const onDevice = (v) => (device === "desktop" ? v.width >= 1024 : device === "mobile" ? v.width < 768 : true);
 const outFile = opt("out") || "report.md";
 const inputs = argv.filter((a, i) => !a.startsWith("--") && !(i > 0 && argv[i - 1].startsWith("--")));
 const files = (inputs.length ? inputs : ["logs"]).flatMap((p) =>
@@ -34,7 +37,7 @@ const files = (inputs.length ? inputs : ["logs"]).flatMap((p) =>
 );
 const visits = files
   .flatMap((f) => readFileSync(f, "utf8").split("\n").filter(Boolean).map((l) => JSON.parse(l)))
-  .filter((v) => !v.failed && (!since || v.at >= since));
+  .filter((v) => !v.failed && (!since || v.at >= since) && onDevice(v));
 
 const SLOW = { "variant-large": 450, "variant-pro": 450, zip: 300 };
 const ERRORS = new Set(["apply-coupon"]);
@@ -125,7 +128,7 @@ const converted = visits.filter((v) => v.converted).length;
 const mobile = visits.filter((v) => v.mobile).length;
 const first = visits.map((v) => v.at).sort()[0];
 const last = visits.map((v) => v.at).sort().at(-1);
-let md = `# What Footprints should show\n\nFrom ${total} simulated visits, ${first ? first.slice(0, 16).replace("T", " ") : "–"} to ${last ? last.slice(0, 16).replace("T", " ") : "–"} UTC. ${pct(mobile, total)} on phones; ${converted} orders (${pct(converted, total)} of visits).\n\n`;
+let md = `# What Footprints should show${device === "all" ? "" : ` (${device})`}\n\nFrom ${total} simulated visits, ${first ? first.slice(0, 16).replace("T", " ") : "–"} to ${last ? last.slice(0, 16).replace("T", " ") : "–"} UTC. ${pct(mobile, total)} on phones; ${converted} orders (${pct(converted, total)} of visits).\n\n`;
 md += "Dynatrace may count a few visits less (sessions it drops or has not closed yet): compare shares, not exact counts.\n\n";
 md += table("Home page (/)", (p) => p === "/");
 md += scrollReach("/");
